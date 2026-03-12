@@ -1,5 +1,8 @@
+'use client';
+
 type Props = {
   category: 'software' | 'education' | 'creator-tools';
+  topicSlug: string;
 };
 
 const offers = {
@@ -17,17 +20,32 @@ const offers = {
   ]
 } as const;
 
-export function MonetizationBlock({ category }: Props) {
+async function trackClick(topicSlug: string, offerName: string, href: string) {
+  try {
+    await fetch('/api/click', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ topicSlug, offerName, href })
+    });
+  } catch {
+    // best-effort only
+  }
+}
+
+export function MonetizationBlock({ category, topicSlug }: Props) {
   return (
     <section style={{ marginTop: 24, border: '1px solid #233', borderRadius: 12, padding: 16 }}>
       <h3 style={{ marginTop: 0 }}>Recommended tools</h3>
-      <p style={{ opacity: 0.8, marginTop: 0 }}>Monetization slot (replace # with real affiliate links).</p>
+      <p style={{ opacity: 0.8, marginTop: 0 }}>
+        Monetization slot (replace # with real affiliate links).
+      </p>
       <div style={{ display: 'grid', gap: 10 }}>
         {offers[category].map((o) => (
           <a
             key={o.name}
             href={o.href}
             rel="nofollow sponsored"
+            onClick={() => trackClick(topicSlug, o.name, o.href)}
             style={{
               textDecoration: 'none',
               color: 'inherit',

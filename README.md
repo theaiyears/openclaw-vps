@@ -2,16 +2,18 @@
 
 Trend-focused SEO micro-site starter designed for traffic capture, lead collection, and affiliate monetization.
 
-## What Pass 3 adds
+## What Pass 4 adds
 
-- Conversion UX: sticky CTA and trust/proof section on topic pages
-- Structured data: FAQ JSON-LD on topic pages
-- Content pipeline starter:
-  - `content/seeds/trends.json`
-  - `scripts/generate-topics.mjs`
-  - output: `content/generated-topics.md`
-- Deploy checklist automation:
-  - `scripts/deploy-check.mjs`
+- Internal-link automation on topic pages
+  - Related content module based on tags/category scoring
+- Monetization click tracking
+  - New endpoint: `POST /api/click`
+  - Tracks offer click events for sponsor/affiliate measurement
+- Conversion upgrades retained
+  - Sticky CTA + FAQ JSON-LD + lead form anchor targeting
+- Content scaling support retained
+  - Seeded trend input + generated draft file
+- Deploy verification retained
   - `npm run deploy:check`
 
 ## Local run

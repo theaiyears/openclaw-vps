@@ -1,8 +1,9 @@
 import { notFound } from 'next/navigation';
-import { getTopic, topics } from '../../../lib/topics';
+import { getRelatedTopics, getTopic, topics } from '../../../lib/topics';
 import { LeadForm } from '../../../components/LeadForm';
 import { MonetizationBlock } from '../../../components/MonetizationBlock';
 import { StickyCta } from '../../../components/StickyCta';
+import { RelatedTopics } from '../../../components/RelatedTopics';
 
 export function generateStaticParams() {
   return topics.map((t) => ({ slug: t.slug }));
@@ -11,6 +12,8 @@ export function generateStaticParams() {
 export default function TopicPage({ params }: { params: { slug: string } }) {
   const topic = getTopic(params.slug);
   if (!topic) return notFound();
+
+  const related = getRelatedTopics(topic.slug, 2);
 
   const faqJsonLd = {
     '@context': 'https://schema.org',
@@ -64,7 +67,8 @@ export default function TopicPage({ params }: { params: { slug: string } }) {
         ))}
       </ol>
 
-      <MonetizationBlock category={topic.affiliateCategory} />
+      <MonetizationBlock category={topic.affiliateCategory} topicSlug={topic.slug} />
+      <RelatedTopics topics={related} />
 
       <h3>Get the full playbook</h3>
       <LeadForm topic={topic.slug} />

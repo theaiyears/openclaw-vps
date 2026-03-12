@@ -6,6 +6,7 @@ export type Topic = {
   checklist: string[];
   cpcHint: string;
   affiliateCategory: 'software' | 'education' | 'creator-tools';
+  tags: string[];
 };
 
 export const topics: Topic[] = [
@@ -22,7 +23,8 @@ export const topics: Topic[] = [
       'Collect 20 lead emails'
     ],
     cpcHint: '$3.50-$12.00',
-    affiliateCategory: 'software'
+    affiliateCategory: 'software',
+    tags: ['ai', 'side-hustle', 'monetization']
   },
   {
     slug: 'faceless-youtube-tools',
@@ -37,7 +39,8 @@ export const topics: Topic[] = [
       'Measure CTR + retention'
     ],
     cpcHint: '$2.00-$9.00',
-    affiliateCategory: 'creator-tools'
+    affiliateCategory: 'creator-tools',
+    tags: ['youtube', 'creator', 'automation']
   },
   {
     slug: 'viral-content-hooks-library',
@@ -51,10 +54,29 @@ export const topics: Topic[] = [
       'Keep top 20% performers'
     ],
     cpcHint: '$1.20-$4.80',
-    affiliateCategory: 'education'
+    affiliateCategory: 'education',
+    tags: ['content', 'hooks', 'growth']
   }
 ];
 
 export function getTopic(slug: string) {
   return topics.find((t) => t.slug === slug);
+}
+
+export function getRelatedTopics(slug: string, limit = 2) {
+  const current = getTopic(slug);
+  if (!current) return topics.slice(0, limit);
+
+  const scored = topics
+    .filter((t) => t.slug !== slug)
+    .map((t) => {
+      const sharedTags = t.tags.filter((tag) => current.tags.includes(tag)).length;
+      const categoryBonus = t.affiliateCategory === current.affiliateCategory ? 1 : 0;
+      return { topic: t, score: sharedTags * 2 + categoryBonus };
+    })
+    .sort((a, b) => b.score - a.score)
+    .slice(0, limit)
+    .map((x) => x.topic);
+
+  return scored;
 }
