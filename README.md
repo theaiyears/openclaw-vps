@@ -2,14 +2,17 @@
 
 Trend-focused SEO micro-site starter designed for traffic capture, lead collection, and affiliate monetization.
 
-## What Pass 2 adds
+## What Pass 3 adds
 
-- Programmatic topic pages (`/topic/[slug]`)
-- Lead capture endpoint with email validation (`/api/lead`)
-- Monetization blocks ready for affiliate links
-- Analytics hook (Plausible)
-- `sitemap.xml` + `robots.txt` generation
-- Vercel-ready config
+- Conversion UX: sticky CTA and trust/proof section on topic pages
+- Structured data: FAQ JSON-LD on topic pages
+- Content pipeline starter:
+  - `content/seeds/trends.json`
+  - `scripts/generate-topics.mjs`
+  - output: `content/generated-topics.md`
+- Deploy checklist automation:
+  - `scripts/deploy-check.mjs`
+  - `npm run deploy:check`
 
 ## Local run
 
@@ -18,10 +21,16 @@ npm install
 npm run dev
 ```
 
-## Production build test
+## Generate topic drafts
 
 ```bash
-npm run build
+npm run topics:generate
+```
+
+## Production checks
+
+```bash
+npm run deploy:check
 ```
 
 ## Deploy (Vercel)
@@ -38,4 +47,4 @@ npm run build
 
 ## Monetization note
 
-`components/MonetizationBlock.tsx` currently uses placeholder links (`#`). Replace those with affiliate/sponsor URLs before launch.
+`components/MonetizationBlock.tsx` uses placeholder links (`#`). Replace those with real affiliate/sponsor URLs before launch.
