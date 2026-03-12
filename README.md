@@ -2,19 +2,24 @@
 
 Trend-focused SEO micro-site starter designed for traffic capture, lead collection, and affiliate monetization.
 
-## What Pass 4 adds
+## What Pass 5 adds
 
-- Internal-link automation on topic pages
-  - Related content module based on tags/category scoring
-- Monetization click tracking
-  - New endpoint: `POST /api/click`
-  - Tracks offer click events for sponsor/affiliate measurement
-- Conversion upgrades retained
-  - Sticky CTA + FAQ JSON-LD + lead form anchor targeting
-- Content scaling support retained
-  - Seeded trend input + generated draft file
-- Deploy verification retained
-  - `npm run deploy:check`
+- Event persistence layer (`data/events.jsonl`)
+  - Lead events saved from `/api/lead`
+  - Click events saved from `/api/click`
+- Metrics API
+  - `GET /api/metrics?token=...`
+  - Returns totals + per-topic counts + simple conversion ratio
+- Local reporting command
+  - `npm run metrics:report`
+
+## Existing stack (Pass 1-4 retained)
+
+- Programmatic topic pages (`/topic/[slug]`)
+- Related-topic internal linking
+- Lead capture + monetization blocks + click tracking
+- SEO support (`robots.txt`, `sitemap.xml`, FAQ JSON-LD)
+- Deploy validation command
 
 ## Local run
 
@@ -35,6 +40,12 @@ npm run topics:generate
 npm run deploy:check
 ```
 
+## Metrics report
+
+```bash
+npm run metrics:report
+```
+
 ## Deploy (Vercel)
 
 1. Push this repo to GitHub
@@ -46,6 +57,7 @@ npm run deploy:check
 
 - `NEXT_PUBLIC_SITE_URL`
 - `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` (optional)
+- `METRICS_TOKEN` (recommended)
 
 ## Monetization note
 

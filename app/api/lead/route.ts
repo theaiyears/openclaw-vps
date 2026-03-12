@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { appendEvent } from '../../../lib/events';
 
 const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -13,6 +14,14 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'invalid email' }, { status: 400 });
   }
 
-  console.log('[lead]', { email: email.toLowerCase(), topic, at: new Date().toISOString() });
+  const record = {
+    email: email.toLowerCase(),
+    topic,
+    at: new Date().toISOString()
+  };
+
+  console.log('[lead]', record);
+  await appendEvent({ type: 'lead', at: record.at, payload: record });
+
   return NextResponse.json({ ok: true });
 }

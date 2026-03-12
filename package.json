@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "topics:generate": "node scripts/generate-topics.mjs",
-    "deploy:check": "node scripts/deploy-check.mjs"
+    "deploy:check": "node scripts/deploy-check.mjs",
+    "metrics:report": "node scripts/report-metrics.mjs"
   },
   "dependencies": {
     "next": "14.2.33",
