@@ -2,24 +2,28 @@
 
 Trend-focused SEO micro-site starter designed for traffic capture, lead collection, and affiliate monetization.
 
-## What Pass 5 adds
+## What Pass 6 adds
 
-- Event persistence layer (`data/events.jsonl`)
-  - Lead events saved from `/api/lead`
-  - Click events saved from `/api/click`
-- Metrics API
-  - `GET /api/metrics?token=...`
-  - Returns totals + per-topic counts + simple conversion ratio
-- Local reporting command
-  - `npm run metrics:report`
+- A/B lead CTA variant framework
+  - Deterministic variant assignment per topic (`lib/ab.ts`)
+  - Lead form button copy varies by variant
+  - Variant stored in lead events
+- UTM capture on lead submit
+  - `utm_source`, `utm_medium`, `utm_campaign` captured from URL query
+- Metrics refactor + admin dashboard
+  - Shared metrics summarizer (`lib/metrics.ts`)
+  - API endpoint: `GET /api/metrics?token=...`
+  - Dashboard page: `/admin?token=...`
+- Existing event persistence maintained
+  - `data/events.jsonl` log for lead + click events
 
-## Existing stack (Pass 1-4 retained)
+## Existing stack (Pass 1-5 retained)
 
 - Programmatic topic pages (`/topic/[slug]`)
 - Related-topic internal linking
 - Lead capture + monetization blocks + click tracking
 - SEO support (`robots.txt`, `sitemap.xml`, FAQ JSON-LD)
-- Deploy validation command
+- Topic draft generation + deploy checks
 
 ## Local run
 

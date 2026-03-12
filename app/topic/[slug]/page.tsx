@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import { getRelatedTopics, getTopic, topics } from '../../../lib/topics';
+import { pickVariant } from '../../../lib/ab';
 import { LeadForm } from '../../../components/LeadForm';
 import { MonetizationBlock } from '../../../components/MonetizationBlock';
 import { StickyCta } from '../../../components/StickyCta';
@@ -14,6 +15,7 @@ export default function TopicPage({ params }: { params: { slug: string } }) {
   if (!topic) return notFound();
 
   const related = getRelatedTopics(topic.slug, 2);
+  const variant = pickVariant(topic.slug);
 
   const faqJsonLd = {
     '@context': 'https://schema.org',
@@ -71,7 +73,7 @@ export default function TopicPage({ params }: { params: { slug: string } }) {
       <RelatedTopics topics={related} />
 
       <h3>Get the full playbook</h3>
-      <LeadForm topic={topic.slug} />
+      <LeadForm topic={topic.slug} variant={variant} />
 
       <StickyCta />
     </main>
