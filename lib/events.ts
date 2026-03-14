@@ -1,7 +1,16 @@
 import fs from 'fs/promises';
 import path from 'path';
 
-const eventsPath = path.join(process.cwd(), 'data', 'events.jsonl');
+function resolveEventsPath() {
+  // Vercel/serverless filesystems are read-only except /tmp.
+  if (process.env.VERCEL) {
+    return '/tmp/trendforge-events.jsonl';
+  }
+
+  return path.join(process.cwd(), 'data', 'events.jsonl');
+}
+
+const eventsPath = resolveEventsPath();
 
 export type EventRecord = {
   type: 'lead' | 'click';

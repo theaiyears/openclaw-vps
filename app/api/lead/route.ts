@@ -43,7 +43,13 @@ export async function POST(req: NextRequest) {
   };
 
   console.log('[lead]', { topic: record.topic, variant: record.variant, at: record.at });
-  await appendEvent({ type: 'lead', at: record.at, payload: record });
+
+  try {
+    await appendEvent({ type: 'lead', at: record.at, payload: record });
+  } catch (error) {
+    console.error('[lead][appendEvent][error]', error);
+    return NextResponse.json({ ok: true, warning: 'event_store_unavailable' });
+  }
 
   return NextResponse.json({ ok: true });
 }

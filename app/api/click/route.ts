@@ -33,7 +33,13 @@ export async function POST(req: NextRequest) {
   };
 
   console.log('[click]', { topicSlug: record.topicSlug, offerName: record.offerName, at: record.at });
-  await appendEvent({ type: 'click', at: record.at, payload: record });
+
+  try {
+    await appendEvent({ type: 'click', at: record.at, payload: record });
+  } catch (error) {
+    console.error('[click][appendEvent][error]', error);
+    return NextResponse.json({ ok: true, warning: 'event_store_unavailable' });
+  }
 
   return NextResponse.json({ ok: true });
 }
