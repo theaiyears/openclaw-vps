@@ -15,10 +15,18 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const body = await req.json();
-  const { email, topic, website, variant, utm_source, utm_medium, utm_campaign } = body;
+  const body = await req.json().catch(() => null);
+  if (!body || typeof body !== 'object') {
+    return NextResponse.json({ error: 'invalid_json' }, { status: 400 });
+  }
+
+  const { email, topic, website, variant, utm_source, utm_medium, utm_campaign } = body as Record<string, unknown>;
 
   if (typeof email !== 'string' || typeof topic !== 'string') {
+    return NextResponse.json({ error: 'invalid payload' }, { status: 400 });
+  }
+
+  if (email.length > 320 || topic.length > 120) {
     return NextResponse.json({ error: 'invalid payload' }, { status: 400 });
   }
 
@@ -26,13 +34,16 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: true });
   }
 
-  if (!emailRe.test(email)) {
+  const normalizedEmail = email.trim().toLowerCase();
+  const normalizedTopic = topic.trim();
+
+  if (!emailRe.test(normalizedEmail)) {
     return NextResponse.json({ error: 'invalid email' }, { status: 400 });
   }
 
   const record = {
-    email: email.toLowerCase(),
-    topic,
+    email: normalizedEmail,
+    topic: normalizedTopic,
     variant: typeof variant === 'string' ? variant : undefined,
     utm_source: typeof utm_source === 'string' ? utm_source : undefined,
     utm_medium: typeof utm_medium === 'string' ? utm_medium : undefined,

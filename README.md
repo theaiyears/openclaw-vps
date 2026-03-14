@@ -66,6 +66,7 @@ This repo now includes:
 - Improved metrics auth support (`Authorization: Bearer ...` or `x-metrics-token`)
 - `Cache-Control: no-store` on `/api/metrics`
 - Optional env-based affiliate offer links (no more hardcoded `#` placeholders)
+- Optional Supabase-backed event storage for durable analytics on Vercel
 
 ### Metrics API auth examples
 
@@ -75,12 +76,49 @@ curl -H "Authorization: Bearer $METRICS_TOKEN" https://your-site.vercel.app/api/
 curl -H "x-metrics-token: $METRICS_TOKEN" https://your-site.vercel.app/api/metrics
 ```
 
+### Durable event storage (Supabase)
+
+On Vercel, local file storage is ephemeral. For persistent leads/click analytics, configure Supabase.
+
+1) Create a table:
+
+```sql
+create table if not exists public.events (
+  id bigint generated always as identity primary key,
+  type text not null check (type in ('lead','click')),
+  at timestamptz not null default now(),
+  payload jsonb not null
+);
+
+create index if not exists events_at_idx on public.events (at desc);
+create index if not exists events_type_idx on public.events (type);
+```
+
+2) Add Vercel env vars:
+- `SUPABASE_URL`
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `SUPABASE_EVENTS_TABLE` (optional, defaults to `events`)
+
+If these are set, the app writes/reads events from Supabase automatically.
+
 ## Environment
 
+Required:
 - `NEXT_PUBLIC_SITE_URL`
-- `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` (optional)
-- `METRICS_TOKEN` (recommended)
+- `METRICS_TOKEN`
+
+Optional:
+- `NEXT_PUBLIC_PLAUSIBLE_DOMAIN`
+- `SUPABASE_URL`
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `SUPABASE_EVENTS_TABLE`
+- `NEXT_PUBLIC_OFFER_SOFTWARE_1_URL`
+- `NEXT_PUBLIC_OFFER_SOFTWARE_2_URL`
+- `NEXT_PUBLIC_OFFER_EDUCATION_1_URL`
+- `NEXT_PUBLIC_OFFER_EDUCATION_2_URL`
+- `NEXT_PUBLIC_OFFER_CREATOR_TOOLS_1_URL`
+- `NEXT_PUBLIC_OFFER_CREATOR_TOOLS_2_URL`
 
 ## Monetization note
 
-`components/MonetizationBlock.tsx` uses placeholder links (`#`). Replace those with real affiliate/sponsor URLs before launch.
+Offer cards now use env vars for links. Any unset offer URL is shown as "Offer link coming soon".
