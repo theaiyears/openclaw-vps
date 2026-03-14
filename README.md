@@ -57,6 +57,24 @@ npm run metrics:report
 3. Set env vars from `.env.example`
 4. Deploy
 
+## Production hardening updates
+
+This repo now includes:
+
+- Basic API rate limiting for `POST /api/lead` and `POST /api/click`
+- Honeypot spam field for lead submissions
+- Improved metrics auth support (`Authorization: Bearer ...` or `x-metrics-token`)
+- `Cache-Control: no-store` on `/api/metrics`
+- Optional env-based affiliate offer links (no more hardcoded `#` placeholders)
+
+### Metrics API auth examples
+
+```bash
+curl -H "Authorization: Bearer $METRICS_TOKEN" https://your-site.vercel.app/api/metrics
+# or
+curl -H "x-metrics-token: $METRICS_TOKEN" https://your-site.vercel.app/api/metrics
+```
+
 ## Environment
 
 - `NEXT_PUBLIC_SITE_URL`
